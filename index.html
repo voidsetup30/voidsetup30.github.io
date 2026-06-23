@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>voidsetup30 | Setup Products & Wallpapers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #E6DCBF; 
+            --card-bg: #F4EFE0;
+            --text-main: #1A1A1A;
+            --text-muted: #555555;
+            --accent-blue: #1DA1F2; 
+            --border-line: #D0C4A4;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; overflow-x: hidden; }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; width: 100%; max-width: 600px; margin: 0 auto; }
+        .nav-trigger, .search-trigger { font-size: 22px; cursor: pointer; color: var(--text-main); background: none; border: none; }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background-color: var(--bg-color); box-shadow: 4px 0 15px rgba(0,0,0,0.1); z-index: 1000; transition: left 0.3s ease; padding: 20px; border-right: 1px solid var(--border-line); }
+        .sidebar.active { left: 0; }
+        .sidebar-header { display: flex; justify-content: flex-end; margin-bottom: 25px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-item { padding: 12px 10px; font-size: 18px; font-weight: 500; cursor: pointer; border-bottom: 1px solid var(--border-line); display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-sub-menu { list-style: none; padding-left: 15px; display: none; background-color: rgba(255,255,255,0.15); border-radius: 8px; }
+        .sidebar-sub-menu.open { display: block; margin-top: 5px; margin-bottom: 10px; }
+        .sidebar-sub-item { padding: 8px 10px; font-size: 15px; color: var(--text-muted); cursor: pointer; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 999; display: none; }
+        .search-container { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 20px; display: none; }
+        .search-container.active { display: block; }
+        .search-bar-wrapper { position: relative; display: flex; align-items: center; background-color: var(--card-bg); border-radius: 25px; padding: 8px 15px; border: 1px solid var(--border-line); }
+        .search-bar-wrapper input { width: 100%; border: none; background: transparent; outline: none; font-size: 16px; padding-right: 30px; }
+        .search-close { position: absolute; right: 15px; cursor: pointer; font-size: 18px; }
+        .profile-section { display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 10px; margin-bottom: 25px; }
+        .profile-avatar { width: 110px; height: 110px; background-color: #000000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 600; font-size: 13px; letter-spacing: 0.2px; margin-bottom: 15px; text-transform: lowercase; padding: 5px; }
+        .profile-name-container { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+        .profile-name { font-size: 24px; font-weight: 700; text-transform: lowercase; letter-spacing: 0.5px; }
+        .verified-badge { color: var(--accent-blue); font-size: 18px; }
+        .social-communication-row { display: flex; align-items: center; gap: 20px; margin-top: 5px; }
+        .social-icon-btn { font-size: 24px; color: var(--text-main); text-decoration: none; }
+        .main-content-area { width: 100%; max-width: 600px; margin: 0 auto; padding: 0 20px; }
+        .section-divider-line { height: 1px; background-color: var(--border-line); width: 100%; margin: 20px 0; }
+        .wallpaper-navigation-card { background-color: var(--card-bg); border-radius: 20px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 17px; border: 1px solid var(--border-line); margin-bottom: 25px; }
+        .section-headline { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 20px; }
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .product-card { background-color: var(--card-bg); border-radius: 20px; padding: 15px; display: flex; flex-direction: column; align-items: center; position: relative; border: 1px solid var(--border-line); }
+        .card-dots { position: absolute; top: 12px; right: 15px; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 5px; z-index: 10; }
+        .product-image-box { width: 100%; aspect-ratio: 1/1; background-color: #FFFFFF; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
+        .product-image-box img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
+        .product-title { font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 12px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        .view-details-btn { background-color: #E2D7B9; color: var(--text-main); border: 1px solid var(--border-line); padding: 8px 25px; border-radius: 15px; font-size: 14px; font-weight: 500; cursor: pointer; width: 85%; text-align: center; }
+        .view-panel { display: none; }
+        .view-panel.active { display: block; }
+        .back-navigation-btn { background-color: #E2D7B9; color: var(--text-main); border: 1px solid var(--border-line); padding: 10px 18px; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+        .wallpaper-list { display: flex; flex-direction: column; gap: 12px; }
+        .wallpaper-item-row { background-color: var(--card-bg); border-radius: 25px; padding: 16px 22px; font-size: 16px; font-weight: 500; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: var(--text-main); border: 1px solid var(--border-line); }
+        .product-detail-hero { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px; }
+        .product-detail-large-img { width: 180px; height: 180px; background-color: #FFFFFF; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border: 1px solid var(--border-line); overflow: hidden; }
+        .product-detail-large-img img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+        .product-detail-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; }
+        .product-specs-list { list-style: none; margin-bottom: 25px; padding: 0 10px; }
+        .product-specs-list li { font-size: 15px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; text-align: left; color: var(--text-muted); }
+        .product-specs-list li i { color: var(--text-main); margin-top: 4px; }
+        .amazon-redirect-action { background-color: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-line); padding: 15px; border-radius: 20px; font-size: 16px; font-weight: 600; text-align: left; display: flex; justify-content: space-between; align-items: center; text-decoration: none; width: 100%; }
+        .affiliate-notice-footer { text-align: center; font-size: 11px; color: #777265; margin-top: 40px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebarMenu">
+        <div class="sidebar-header"><i class="fa-solid fa-xmark nav-trigger" onclick="toggleSidebar()"></i></div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item" onclick="routeTo('main-home-view'); toggleSidebar();">Home</li>
+            <li class="sidebar-item" onclick="toggleSubMenu(event)">Products <i class="fa-solid fa-caret-down"></i></li>
+            <ul class="sidebar-sub-menu" id="productsSubMenu">
+                <li class="sidebar-sub-item" onclick="openProductDetail(1); toggleSidebar();">Gaming Laptop</li>
+                <li class="sidebar-sub-item" onclick="openProductDetail(2); toggleSidebar();">Gaming Mouse</li>
+                <li class="sidebar-sub-item" onclick="openProductDetail(3); toggleSidebar();">Laptop Stand</li>
+                <li class="sidebar-sub-item" onclick="openProductDetail(4); toggleSidebar();">Gaming Headphones</li>
+            </ul>
+            <li class="sidebar-item" onclick="routeTo('wallpapers-view'); toggleSidebar();">Wallpapers</li>
+        </ul>
+    </div>
+
+    <div class="top-navbar">
+        <button class="nav-trigger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <button class="search-trigger" onclick="toggleSearchBar()"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="search-container" id="searchContainer">
+        <div class="search-bar-wrapper">
+            <input type="text" id="productSearchInput" placeholder="Search setup items..." onkeyup="executeSearch()">
+            <i class="fa-solid fa-xmark search-close" onclick="toggleSearchBar()"></i>
+        </div>
+        <div class="section-divider-line"></div>
+    </div>
+
+    <div id="main-home-view" class="view-panel active">
+        <div class="profile-section">
+            <div class="profile-avatar">voidsetup30</div>
+            <div class="profile-name-container">
+                <h1 class="profile-name">voidsetup30</h1>
+                <i class="fa-solid fa-circle-check verified-badge"></i>
+            </div>
+            <div class="social-communication-row">
+                <a href="https://www.instagram.com/voidsetup30?igsh=NXEzOXpnZmxyYnVt" class="social-icon-btn" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="mailto:voidsetup30@Gmail.com" class="social-icon-btn" target="_blank"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </div>
+
+        <div class="main-content-area">
+            <div class="wallpaper-navigation-card" onclick="routeTo('wallpapers-view')"><span>Wallpapers links ➔</span></div>
+            <div class="section-divider-line"></div>
+            <h2 class="section-headline">My Setup Products</h2>
+
+            <div class="products-grid" id="setupProductsGrid">
+                <!-- Laptop Box (Points to local laptop.jpg) -->
+                <div class="product-card" data-title="Gaming Laptop">
+                    <i class="fa-solid fa-ellipsis-vertical card-dots" onclick="shareProductDirectly('https://amzn.in/d/0ftmnNyC')"></i>
+                    <div class="product-image-box"><img src="laptop.jpg" alt="Gaming Laptop"></div>
+                    <div class="product-title">Gaming Laptop</div>
+                    <button class="view-details-btn" onclick="openProductDetail(1)">View</button>
+                </div>
+                <!-- Mouse Box (Points to local mouse.jpg) -->
+                <div class="product-card" data-title="Gaming Mouse">
+                    <i class="fa-solid fa-ellipsis-vertical card-dots" onclick="shareProductDirectly('https://amzn.in/d/0buSHpa7')"></i>
+                    <div class="product-image-box"><img src="mouse.jpg" alt="Gaming Mouse"></div>
+                    <div class="product-title">Gaming Mouse</div>
+                    <button class="view-details-btn" onclick="openProductDetail(2)">View</button>
+                </div>
+                <!-- Stand Box (Points to local stand.jpg) -->
+                <div class="product-card" data-title="Laptop Stand">
+                    <i class="fa-solid fa-ellipsis-vertical card-dots" onclick="shareProductDirectly('https://amzn.in/d/0cvfNFRt')"></i>
+                    <div class="product-image-box"><img src="stand.jpg" alt="Laptop Stand"></div>
+                    <div class="product-title">Laptop Stand</div>
+                    <button class="view-details-btn" onclick="openProductDetail(3)">View</button>
+                </div>
+                <!-- Headphones Box (Points to local headphones.jpg) -->
+                <div class="product-card" data-title="Gaming Headphones">
+                    <i class="fa-solid fa-ellipsis-vertical card-dots" onclick="shareProductDirectly('https://amzn.in/d/0j9j7pV6')"></i>
+                    <div class="product-image-box"><img src="headphones.jpg" alt="Gaming Headphones"></div>
+                    <div class="product-title">Gaming Headphones</div>
+                    <button class="view-details-btn" onclick="openProductDetail(4)">View</button>
+                </div>
+            </div>
+            <div class="section-divider-line"></div>
+            <div class="affiliate-notice-footer">As an Amazon Associate, I earn from qualifying purchases.<br>© 2026 voidsetup30</div>
+        </div>
+    </div>
+
+    <div id="wallpapers-view" class="view-panel">
+        <div class="main-content-area" style="margin-top: 20px;">
+            <button class="back-navigation-btn" onclick="routeTo('main-home-view')"><i class="fa-solid fa-arrow-left"></i> Back to Home</button>
+            <h2 class="section-headline" style="text-align: left; margin-bottom: 25px;">Free Wallpapers by voidsetup30</h2>
+            <div class="wallpaper-list">
+                <a href="https://drive.google.com/" class="wallpaper-item-row" target="_blank"><span>Wallpaper Pack Part 3</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                <a href="https://drive.google.com/" class="wallpaper-item-row" target="_blank"><span>Wallpaper Pack Part 2</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                <a href="https://drive.google.com/" class="wallpaper-item-row" target="_blank"><span>Wallpaper Pack Part 1</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="product-details-view" class="view-panel">
+        <div class="main-content-area" style="margin-top: 20px;">
+            <button class="back-navigation-btn" onclick="routeTo('main-home-view')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <div class="product-detail-hero">
+                <div class="product-detail-large-img" id="detailIconBox"></div>
+                <h2 class="product-detail-title" id="detailTitle">Product Title</h2>
+            </div>
+            <ul class="product-specs-list" id="detailSpecs"></ul>
+            <a href="#" id="detailAmazonLink" class="amazon-redirect-action" target="_blank"><span>Buy Now / View Product</span><i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <script>
+        const productDatabase = {
+            1: { title: "Gaming Laptop", img: "laptop.jpg", link: "https://amzn.in/d/0ftmnNyC", specs: ["High Performance Gaming Processor Architecture", "Advanced Dedicated External Graphics Hardware", "High Refresh-Rate Fluid Display Panels", "Performance Built Thermal Heat Dispersion System Layers"] },
+            2: { title: "Gaming Mouse", img: "mouse.jpg", link: "https://amzn.in/d/0buSHpa7", specs: ["Ultra-Precise High-Tracking Optical Sensor Grid", "Ultra Light Form Component Handle Shape", "Durable Mechanical Tactile Micro Switch Buttons", "Low Interception Lag Response Signal Interface"] },
+            3: { title: "Laptop Stand", img: "stand.jpg", link: "https://amzn.in/d/0cvfNFRt", specs: ["Ergonomic Desktop Setup Angle Alignment Elevation", "Durable Metallic Base Structural Foundation", "Open Workspace Ventilation Heat Dispersion Air Channels", "Anti-Scratch Soft Protective Non-Slip Rubber Grip Mats"] },
+            4: { title: "Gaming Headphones", img: "headphones.jpg", link: "https://amzn.in/d/0j9j7pV6", specs: ["High fidelity Immersive Deep Stereo Bass Profiles", "Soft Ventilated Long Wear Ear Cushion Pads", "Integrated Microphone Attachment Communication Channels", "Universal Device System Auxiliary Multi-Platform Link"] }
+        };
+
+        function routeTo(panelId) {
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
+            const activePanel = document.getElementById(panelId);
+            activePanel.style.display = 'block';
+            activePanel.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            if(sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                overlay.style.display = 'none';
+            } else {
+                sidebar.classList.add('active');
+                overlay.style.display = 'block';
+            }
+        }
+
+        function toggleSubMenu(e) { e.stopPropagation(); document.getElementById('productsSubMenu').classList.toggle('open'); }
+
+        function toggleSearchBar() {
+            const container = document.getElementById('searchContainer');
+            container.classList.toggle('active');
+            const input = document.getElementById('productSearchInput');
+            if(container.classList.contains('active')) { input.focus(); } else { input.value = ""; executeSearch(); }
+        }
+
+        function executeSearch() {
+            const query = document.getElementById('productSearchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#setupProductsGrid .product-card');
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                card.style.display = title.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        function openProductDetail(productId) {
+            const product = productDatabase[productId];
+            if(!product) return;
+            document.getElementById('detailTitle').innerText = product.title;
+            document.getElementById('detailIconBox').innerHTML = `<img src="${product.img}" alt="${product.title}">`;
+            document.getElementById('detailAmazonLink').href = product.link;
+            const specsList = document.getElementById('detailSpecs');
+            specsList.innerHTML = "";
+            product.specs.forEach(spec => { specsList.innerHTML += `<li><i class="fa-solid fa-check"></i> <span>${spec}</span></li>`; });
+            routeTo('product-details-view');
+        }
+
+        function shareProductDirectly(linkUrl) {
+            event.stopPropagation();
+            if (navigator.share) { navigator.share({ title: 'Check out this setup product!', url: linkUrl }).catch(err => console.log(err)); } 
+            else { navigator.clipboard.writeText(linkUrl); alert("Amazon Product Link copied directly to your clipboard!"); }
+        }
+    </script>
+</body>
+</html>
